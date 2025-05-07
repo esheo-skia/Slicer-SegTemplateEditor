@@ -28,7 +28,7 @@ A simple 3D Slicer extension to create, save, and manage label groups with rando
 
 ## Author
 
-**허은서 (esheo-skia)**  
+**Eunseo Heo (esheo-skia)**  
 GitHub: [esheo-skia](https://github.com/esheo-skia)  
 Email: esheo.skia@gmail.com
 
