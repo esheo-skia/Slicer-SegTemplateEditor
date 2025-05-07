@@ -7,7 +7,7 @@ scm: git
 scmurl: https://github.com/esheo-skia/Slicer-LabelNameGenerator.git
 scmrevision: main
 
-developer: 허은서 (esheo-skia)
+developer: Eunseo Heo (esheo-skia)
 email: esheo.skia@gmail.com
 
 category: Segmentation
