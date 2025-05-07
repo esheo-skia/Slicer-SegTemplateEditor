@@ -11,7 +11,7 @@ class LabelNameGenerator(ScriptedLoadableModule):
         self.parent.title = "Label Name Generator"
         self.parent.categories = ["Segmentation"]
         self.parent.contributors = ["Eunseo Heo (esheo-skia)"]
-        self.parent.helpText = "Save and apply label groups to Segment Editor."
+        self.parent.helpText = "Save and apply label groups to Segment Editor.\nThis is useful for repetitive anatomical structure labeling tasks."
         self.parent.acknowledgementText = "Developed by Eunseo Heo using 3D Slicer framework."
 
 
