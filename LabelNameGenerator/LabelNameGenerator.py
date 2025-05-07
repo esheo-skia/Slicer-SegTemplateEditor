@@ -10,9 +10,9 @@ class LabelNameGenerator(ScriptedLoadableModule):
         ScriptedLoadableModule.__init__(self, parent)
         self.parent.title = "Label Name Generator"
         self.parent.categories = ["Segmentation"]
-        self.parent.contributors = ["Your Name"]
+        self.parent.contributors = ["Eunseo Heo (esheo-skia)"]
         self.parent.helpText = "Save and apply label groups to Segment Editor."
-        self.parent.acknowledgementText = ""
+        self.parent.acknowledgementText = "Developed by Eunseo Heo using 3D Slicer framework."
 
 
 class LabelNameGeneratorWidget(ScriptedLoadableModuleWidget):
