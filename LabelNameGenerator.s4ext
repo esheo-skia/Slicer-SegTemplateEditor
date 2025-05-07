@@ -1,0 +1,26 @@
+slicerExtensionDescriptionVersion: 1
+
+extensionId: LabelNameGenerator
+extensionTitle: Label Name Generator
+
+scm: git
+scmurl: https://github.com/esheo-skia/Slicer-LabelNameGenerator.git
+scmrevision: main
+
+developer: 허은서 (esheo-skia)
+email: esheo.skia@gmail.com
+
+category: Segmentation
+
+description: |
+  A simple extension to create, save, and apply label groups for segmentation in 3D Slicer.
+
+depends:
+
+homepage: https://github.com/esheo-skia/Slicer-LabelNameGenerator
+
+iconurl: https://raw.githubusercontent.com/esheo-skia/Slicer-LabelNameGenerator/main/Resources/Icons/LabelNameGenerator.png
+
+license: MIT
+
+status: stable
