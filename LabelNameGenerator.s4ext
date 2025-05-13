@@ -1,26 +1,38 @@
-slicerExtensionDescriptionVersion: 1
+# First line must be the extension name
+LabelNameGenerator
 
-extensionId: LabelNameGenerator
-extensionTitle: Label Name Generator
+# Name to display in the Extension Manager
+Label Name Generator
 
-scm: git
-scmurl: https://github.com/esheo-skia/Slicer-LabelNameGenerator.git
-scmrevision: main
+# One line summary, used as subtitle in Extension Manager
+Save and apply reusable label groups for Segment Editor
 
-developer: Eunseo Heo (esheo-skia)
-email: esheo.skia@gmail.com
+# Longer description, shown in Extension Manager
+A simple extension to streamline repetitive anatomical labeling.  
+Define label sets once and reuse them across Segment Editor sessions.  
+Each label gets a distinct color using golden-ratio hue stepping.
 
-category: Segmentation
+# Author(s)
+Eunseo Heo (esheo-skia)
 
-description: |
-  A simple extension to create, save, and apply label groups for segmentation in 3D Slicer.
+# Contributor(s) - optional
+Eunseo Heo
 
-depends:
+# URL of the extension's homepage
+https://github.com/esheo-skia/Slicer-LabelNameGenerator
 
-homepage: https://github.com/esheo-skia/Slicer-LabelNameGenerator
+# Category in the Extension Manager
+Segmentation
 
-iconurl: https://raw.githubusercontent.com/esheo-skia/Slicer-LabelNameGenerator/main/Resources/Icons/LabelNameGenerator.png
+# Icon filename in the Resources/Icons subfolder
+LabelNameGenerator.png
 
-license: MIT
+# Main module to load when the extension is started
+LabelNameGenerator
 
-status: stable
+# List of module dependencies (space separated)
+# If none, leave empty
+#
+
+# Supported platforms (space-separated; one or more of: linux, macos, windows)
+windows macos linux

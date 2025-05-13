@@ -1,30 +1,55 @@
-# LabelNameGenerator
+# Label Name Generator
 
-A simple 3D Slicer extension to create, save, and manage label groups with random colors for segmentation.
+**Label Name Generator** is a 3D Slicer extension to save and apply reusable label groups for Segment Editor.  
+Each label is assigned a visually distinct color using golden-ratio hue stepping, allowing for fast and consistent anatomical labeling.
+
+---
 
 ## Features
 
-- Input multiple label names and save them as reusable groups
-- Automatically assign random colors to each label upon creation
-- Apply saved groups directly to the Segment Editor
-- Detect and avoid duplicated labels before applying
-- Auto-select or auto-apply label groups when selected
+- Define label sets and save them as reusable groups
+- Auto-assign visually distinct colors using golden-ratio hue stepping
+- Apply saved label groups to any existing segmentation in Segment Editor
+- Prevent duplicate label creation and handle confirmation safely
+- Groups are persisted in `labels.json` and shared across projects
 
-## Preview
-
-| Description | Screenshot |
-|-------------|------------|
-| **1. Label group editor UI** <br> Checkboxes for selecting multiple labels and saving to a group | ![Group Editor](Resources/Screenshots/label_group_editor.png) |
-| **2. Group applied to Segment Editor** <br> Labels are added with pre-assigned colors | ![Segment Editor](Resources/Screenshots/label_segments_applied.png) |
-| **3. Duplicate label warning** <br> Alerts if labels already exist in the Segment Editor | ![Duplicate Warning](Resources/Screenshots/duplicate_label_warning.png) |
+---
 
 ## How to Use
 
-1. Select multiple labels using checkboxes
-2. Enter a group name and click **Save label group**
-3. From the dropdown, choose a saved group
-4. Click **Apply selected group** to add the labels to Segment Editor
-5. If a group contains duplicate labels, a warning will appear
+### 1. Enter Labels and Save a Group
+- Enter label names line-by-line (e.g., `left renal artery`, `right renal artery`, etc.)
+- Input a group name (e.g., `Abdomen vessels`)
+- Click `Save label group`
+
+![Step 1 - Save label group](Resources/Screenshots/step1_save_label_group.png)
+
+Labels will be saved with auto-assigned colors. Duplicate or empty lines are ignored. If a group already exists, overwrite confirmation will appear.
+
+---
+
+### 2. Apply Group to Segment Editor
+- Select a saved group from the dropdown
+- Click `Apply selected group`
+
+A confirmation popup will appear showing the current segmentation name.  
+This helps avoid accidental application to the wrong segmentation.
+
+![Step 2 - Confirm segmentation](Resources/Screenshots/step2_confirm_apply.png)
+
+If duplicate labels already exist in the segmentation, you’ll be asked whether to skip them.
+
+---
+
+### 3. View Results in Segment Editor
+- Newly applied segments will appear with distinct colors
+- Colors are assigned using golden-ratio hue stepping to reduce similarity
+
+![Step 3 - Segment Editor view](Resources/Screenshots/step3_segment_editor_result.png)
+
+Segments are automatically linked to the master volume and displayed with their assigned colors.
+
+---
 
 ## Author
 
@@ -32,7 +57,10 @@ A simple 3D Slicer extension to create, save, and manage label groups with rando
 GitHub: [esheo-skia](https://github.com/esheo-skia)  
 Email: esheo.skia@gmail.com
 
+---
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
 
