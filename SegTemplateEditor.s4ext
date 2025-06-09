@@ -1,8 +1,7 @@
 # First line must be the extension name
-LabelNameGenerator
-
+SegTemplateEditor
 # Name to display in the Extension Manager
-Label Name Generator
+Segmentation Template Editor
 
 # One line summary, used as subtitle in Extension Manager
 Save and apply reusable label groups for Segment Editor
@@ -19,16 +18,16 @@ Eunseo Heo (esheo-skia)
 Eunseo Heo
 
 # URL of the extension's homepage
-https://github.com/esheo-skia/Slicer-LabelNameGenerator
+https://github.com/esheo-skia/Slicer-SegTemplateEditor
 
 # Category in the Extension Manager
 Segmentation
 
 # Icon filename in the Resources/Icons subfolder
-LabelNameGenerator.png
+SegTemplateEditor.png
 
 # Main module to load when the extension is started
-LabelNameGenerator
+SegTemplateEditor
 
 # List of module dependencies (space separated)
 # If none, leave empty
