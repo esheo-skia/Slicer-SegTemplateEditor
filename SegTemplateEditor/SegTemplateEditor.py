@@ -7,19 +7,19 @@ import math
 from slicer.ScriptedLoadableModule import *
 
 
-class LabelNameGenerator(ScriptedLoadableModule):
+class SegTemplateEditor(ScriptedLoadableModule):
     def __init__(self, parent):
         ScriptedLoadableModule.__init__(self, parent)
-        self.parent.title = "Label Name Generator"
+        self.parent.title = "Segmentation Template Editor"
         self.parent.categories = ["Segmentation"]
         self.parent.contributors = ["Eunseo Heo (esheo-skia)"]
         self.parent.helpText = "Save and apply label groups to Segment Editor.\nThis is useful for repetitive anatomical structure labeling tasks."
         self.parent.acknowledgementText = "Developed by Eunseo Heo using 3D Slicer framework."
 
-class LabelNameGeneratorWidget(ScriptedLoadableModuleWidget):
+class SegTemplateEditorWidget(ScriptedLoadableModuleWidget):
     def setup(self):
         ScriptedLoadableModuleWidget.setup(self)
-        self.logic = LabelNameGeneratorLogic()
+        self.logic = SegTemplateEditorLogic()
 
         self.labelInput = qt.QPlainTextEdit()
         self.labelInput.setPlaceholderText("Enter labels (one per line)")
@@ -210,7 +210,7 @@ class LabelNameGeneratorWidget(ScriptedLoadableModuleWidget):
                 self.refreshGroupList()
 
 
-class LabelNameGeneratorLogic(ScriptedLoadableModuleLogic):
+class SegTemplateEditorLogic(ScriptedLoadableModuleLogic):
     def __init__(self):
         super().__init__()
         self.lastColor = None

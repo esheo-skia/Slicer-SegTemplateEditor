@@ -1,5 +1,5 @@
-set(MODULE_NAME LabelNameGenerator)
-set(MODULE_TITLE "Label Name Generator")
+set(MODULE_NAME SegTemplateEditor)
+set(MODULE_TITLE "Segmentation Template Editor")
 
 set(MODULE_PYTHON_SCRIPTS
   ${MODULE_NAME}.py
