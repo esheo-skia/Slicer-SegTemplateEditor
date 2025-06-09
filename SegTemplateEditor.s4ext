@@ -1,5 +1,9 @@
 # First line must be the extension name
 SegTemplateEditor
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6919ed8 (Rename extension to SegTemplateEditor and update all metadata)
 # Name to display in the Extension Manager
 Segmentation Template Editor
 

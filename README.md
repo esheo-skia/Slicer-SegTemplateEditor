@@ -1,6 +1,6 @@
-# Label Name Generator
+# Segmentation Template Editor
 
-**Label Name Generator** is a 3D Slicer extension to save and apply reusable label groups for Segment Editor.  
+**Segmentation Template Editor** is a 3D Slicer extension to save and apply reusable label groups for Segment Editor.  
 Each label is assigned a visually distinct color using golden-ratio hue stepping, allowing for fast and consistent anatomical labeling.
 
 ---
