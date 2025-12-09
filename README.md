@@ -1,17 +1,44 @@
 # Segmentation Template Editor
 
-**Segmentation Template Editor** is a 3D Slicer extension to save and apply reusable label groups for Segment Editor.  
-Each label is assigned a visually distinct color using golden-ratio hue stepping, allowing for fast and consistent anatomical labeling.
+**Segmentation Template Editor** is a 3D Slicer extension that automates repetitive labeling workflows by applying predefined, reusable label groups.  
+It ensures **consistent label names, fixed label values, terminology metadata, and visually distinct colors** for every segmentation.
+
+![Demo](Resources/Screenshots/SegTemplateEditor.gif)
+
+---
+
+##  Quick Demo
+
+ A short overview of the workflow:
+
+- Save a label group
+- Apply it to a segmentation node
+- View the results in Segment Editor
 
 ---
 
 ## Features
 
-- Define label sets and save them as reusable groups
-- Auto-assign visually distinct colors using golden-ratio hue stepping
-- Apply saved label groups to any existing segmentation in Segment Editor
-- Prevent duplicate label creation and handle confirmation safely
-- Groups are persisted in `labels.json` and shared across projects
+- **Reusable label groups**  
+  Save and reapply standardized label sets across projects.
+
+- **Golden-ratio hue stepping colors**  
+  Automatically generates perceptually distinct colors for anatomical clarity.
+
+- **Fixed label value assignment**  
+  Ensures consistent integer values across datasets and prevents merge conflicts.
+
+- **Terminology-aware metadata**  
+  Applies standard anatomical terminology and color metadata when available.
+
+- **Duplicate detection & conflict handling**  
+  Prompts the user to skip or overwrite existing labels safely.
+
+- **CSV Import / Export**  
+  Compatible with Slicer-style color table CSV files.
+
+- **Persistent storage**  
+  Groups are saved in `labels.json` and persist across sessions.
 
 ---
 
@@ -24,7 +51,8 @@ Each label is assigned a visually distinct color using golden-ratio hue stepping
 
 ![Step 1 - Save label group](Resources/Screenshots/step1_save_label_group.png)
 
-Labels will be saved with auto-assigned colors. Duplicate or empty lines are ignored. If a group already exists, overwrite confirmation will appear.
+Labels are saved with auto-assigned colors. Duplicate or empty lines are ignored.
+Overwrite confirmation is shown if the group already exists.
 
 ---
 
@@ -43,7 +71,7 @@ If duplicate labels already exist in the segmentation, you’ll be asked whether
 
 ### 3. View Results in Segment Editor
 - Newly applied segments will appear with distinct colors
-- Colors are assigned using golden-ratio hue stepping to reduce similarity
+- Colors are assigned using golden-ratio hue spacing to reduce similarity
 
 ![Step 3 - Segment Editor view](Resources/Screenshots/step3_segment_editor_result.png)
 
@@ -51,16 +79,52 @@ Segments are automatically linked to the master volume and displayed with their 
 
 ---
 
-## Author
+## Installation
 
-**Eunseo Heo (esheo-skia)**  
-GitHub: [esheo-skia](https://github.com/esheo-skia)  
-Email: esheo.skia@gmail.com
+### Option 1: Extensions Manager (after merge)
+
+> Recommended: Once published in the Extensions Index, install directly from Slicer.
+
+1. Go to `View > Extensions Manager`
+2. Search for `SegTemplateEditor`
+3. Click **Install** and restart Slicer
 
 ---
 
-## License
+### Option 2: Manual Installation (for reviewers & testing)
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+> For use **before official merge** – useful for collaborators, reviewers, or local testing.
+
+#### Step 1: Download this repository
+
+Clone or download the folder:
+```
+SegTemplateEditor/
+├── SegTemplateEditor.py
+└── Resources/
+    ├── Icons/
+    └── Screenshots/
+```
+
+#### Step 2: Register the module in 3D Slicer
+
+1. Launch **3D Slicer**
+2. Go to `Edit > Application Settings > Modules`
+3. In **Additional module paths**, drag and drop the `SegTemplateEditor` folder  
+   *(e.g., `C:/Users/YourName/Desktop/SegTemplateEditor`)*
+4. Ensure **Scripted Loadable Modules** is enabled
+5. Restart Slicer
+
+ After restart, the module appears under:  
+`Modules > Segmentation > Segmentation Template Editor`
+
+---
+
+## Author & License
+
+- **Author:** Eunseo Heo ([@esheo-skia](https://github.com/esheo-skia))  
+- **Email:** heunseo1787@gmail.com  
+- **License:** [MIT License](./LICENSE)
+
 
 
