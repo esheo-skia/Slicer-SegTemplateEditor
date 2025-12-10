@@ -122,9 +122,12 @@ SegTemplateEditor/
 
 ## Author & License
 
-- **Author:** Eunseo Heo ([@esheo-skia](https://github.com/esheo-skia))  
-- **Email:** heunseo1787@gmail.com  
-- **License:** [MIT License](./LICENSE)
+**Eunseo Heo (esheo-skia)**<br>
+*Software Developer — Imaging Tools & Automation*
+
+* **Contact:** [heunseo1787@gmail.com]
+* **GitHub:** [https://github.com/esheo-skia]
+* **License:** [MIT License](./LICENSE)
 
 
 
