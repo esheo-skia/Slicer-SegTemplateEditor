@@ -1,13 +1,13 @@
 # Segmentation Template Editor
 
 **Segmentation Template Editor** is a 3D Slicer extension that automates repetitive labeling workflows by applying predefined, reusable label groups.  
-It ensures **consistent label names, fixed label values, terminology metadata, and visually distinct colors** for every segmentation.
+It ensures **consistent label names and automatically assigned, visually distinct colors** for every segmentation.
 
 ![Demo](Resources/Screenshots/SegTemplateEditor.gif)
 
 ---
 
-##  Quick Demo
+## Quick Demo
 
  A short overview of the workflow:
 
@@ -19,26 +19,23 @@ It ensures **consistent label names, fixed label values, terminology metadata, a
 
 ## Features
 
-- **Reusable label groups**  
+- **Reusable label groups**
   Save and reapply standardized label sets across projects.
 
-- **Golden-ratio hue stepping colors**  
+- **Golden-ratio hue stepping colors**
   Automatically generates perceptually distinct colors for anatomical clarity.
 
-- **Fixed label value assignment**  
-  Ensures consistent integer values across datasets and prevents merge conflicts.
+- **Automatic color assignment**
+  Applies colors consistently when creating new segments.
 
-- **Terminology-aware metadata**  
-  Applies standard anatomical terminology and color metadata when available.
+- **Duplicate detection & conflict handling**
+  Prompts the user to skip existing labels safely.
 
-- **Duplicate detection & conflict handling**  
-  Prompts the user to skip or overwrite existing labels safely.
+- **Segment Editor integration**
+  Automatically links the master volume and ensures a display node exists.
 
-- **CSV Import / Export**  
-  Compatible with Slicer-style color table CSV files.
-
-- **Persistent storage**  
-  Groups are saved in `labels.json` and persist across sessions.
+- **Persistent storage**
+  Label groups are stored in the Slicer user settings directory and preserved across sessions and extension updates.
 
 ---
 
@@ -76,6 +73,13 @@ If duplicate labels already exist in the segmentation, you’ll be asked whether
 ![Step 3 - Segment Editor view](Resources/Screenshots/step3_segment_editor_result.png)
 
 Segments are automatically linked to the master volume and displayed with their assigned colors.
+
+---
+
+## Data Storage & Migration
+
+Saved label groups are stored in the Slicer user settings directory to prevent data loss on extension updates.  
+On first run, legacy `labels.json` files from older versions are automatically migrated.
 
 ---
 
@@ -128,6 +132,3 @@ SegTemplateEditor/
 * **Contact:** [heunseo1787@gmail.com]
 * **GitHub:** [https://github.com/esheo-skia]
 * **License:** [MIT License](./LICENSE)
-
-
-
