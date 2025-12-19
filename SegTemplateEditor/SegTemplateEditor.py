@@ -4,6 +4,8 @@ import random
 import vtk, qt, ctk, slicer
 import colorsys 
 import math
+import shutil
+import tempfile
 from slicer.ScriptedLoadableModule import *
 
 
@@ -148,7 +150,7 @@ class SegTemplateEditorWidget(ScriptedLoadableModuleWidget):
             segmentEditorNode.SetAndObserveSegmentationNode(segmentationNode)
             segmentEditorWidget.setSegmentationNode(segmentationNode)
 
-        # ✅ 확인 메시지 띄우기
+        # ✅ Ask user to confirm the target segmentation
         currentSegmentationName = segmentationNode.GetName()
         result = qt.QMessageBox.question(
             slicer.util.mainWindow(),
@@ -215,56 +217,166 @@ class SegTemplateEditorLogic(ScriptedLoadableModuleLogic):
         super().__init__()
         self.lastColor = None
 
-    def getJsonPath(self):
-        return os.path.join(os.path.dirname(__file__), "labels.json")
+        # ✅ Ensure storage is ready + migrate old data once
+        self._ensureUserDataDir()
+        self._migrateLegacyJsonIfNeeded()
 
-    def saveLabelGroup(self, groupName, labelColorMap):
-        path = self.getJsonPath()
-        allGroups = {}
-        if os.path.exists(path):
-            with open(path, "r", encoding="utf-8") as f:
-                allGroups = json.load(f)
-        allGroups[groupName] = labelColorMap
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(allGroups, f, indent=2)
+    # ----------------------------
+    # ✅ Paths / Migration
+    # ----------------------------
+    def _userSettingsDir(self) -> str:
+        settings = slicer.app.userSettings()
+        # qt.QSettings API: fileName() returns the path to the settings file
+        try:
+            settingsPath = settings.fileName()
+        except Exception:
+            settingsPath = ""
 
-    def loadLabelGroupWithColors(self, groupName):
+        if settingsPath:
+            return os.path.dirname(settingsPath)
+
+        # Fallback: use OS-specific application data directory (rare case)
+        return qt.QStandardPaths.writableLocation(qt.QStandardPaths.AppDataLocation)
+
+
+    def _extensionDir(self) -> str:
+        # Where this .py lives (extension install dir) - NOT safe for user data
+        return os.path.dirname(__file__)
+
+    def _userDataDir(self) -> str:
+        # Keep everything for this extension in a subfolder
+        return os.path.join(self._userSettingsDir(), "SegTemplateEditor")
+
+    def _ensureUserDataDir(self) -> None:
+        os.makedirs(self._userDataDir(), exist_ok=True)
+
+    def getJsonPath(self) -> str:
+        # ✅ Safe: survives extension updates and has write permission
+        return os.path.join(self._userDataDir(), "labels.json")
+
+    def _legacyJsonPath(self) -> str:
+        # Old risky path used previously
+        return os.path.join(self._extensionDir(), "labels.json")
+
+    def _migrateLegacyJsonIfNeeded(self) -> None:
+        """Move legacy labels.json from extension folder to user settings folder (one-time, safe)."""
+        src = self._legacyJsonPath()
+        dst = self.getJsonPath()
+
+        if not os.path.exists(src):
+            return
+
+        # If new file already exists, do not overwrite automatically.
+        # Instead, keep a copy of legacy file for manual inspection.
+        if os.path.exists(dst):
+            try:
+                backup_name = f"labels_legacy_copy_{int(qt.QDateTime.currentDateTime().toSecsSinceEpoch())}.json"
+                backup_path = os.path.join(self._userDataDir(), backup_name)
+                shutil.copy2(src, backup_path)
+            except Exception:
+                # Even if copy fails, do not crash
+                pass
+            return
+
+        try:
+            # Try move first (preferred)
+            shutil.move(src, dst)
+        except Exception:
+            # Fallback to copy
+            try:
+                shutil.copy2(src, dst)
+            except Exception:
+                pass
+
+    # ----------------------------
+    # ✅ Robust JSON I/O
+    # ----------------------------
+    def _safeLoadAllGroups(self) -> dict:
         path = self.getJsonPath()
         if not os.path.exists(path):
             return {}
-        with open(path, "r", encoding="utf-8") as f:
-            allGroups = json.load(f)
-        return allGroups.get(groupName, {})
+
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            return data if isinstance(data, dict) else {}
+        except json.JSONDecodeError:
+            # JSON corrupted -> keep a backup and reset
+            try:
+                corrupt_name = f"labels_corrupt_{int(qt.QDateTime.currentDateTime().toSecsSinceEpoch())}.json"
+                shutil.copy2(path, os.path.join(self._userDataDir(), corrupt_name))
+            except Exception:
+                pass
+            return {}
+        except Exception:
+            return {}
+
+    def _atomicWriteJson(self, path: str, data: dict) -> None:
+        """Write JSON safely: tmp -> os.replace (atomic) + .bak backup."""
+        # Backup current
+        if os.path.exists(path):
+            try:
+                shutil.copy2(path, path + ".bak")
+            except Exception:
+                pass
+
+        dirpath = os.path.dirname(path)
+        os.makedirs(dirpath, exist_ok=True)
+
+        fd, tmp_path = tempfile.mkstemp(prefix="labels_", suffix=".tmp", dir=dirpath)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
+                f.flush()
+                os.fsync(f.fileno())
+            os.replace(tmp_path, path)  # atomic on same filesystem
+        finally:
+            # If something failed before replace, cleanup tmp
+            try:
+                if os.path.exists(tmp_path):
+                    os.remove(tmp_path)
+            except Exception:
+                pass
+
+    def _safeSaveAllGroups(self, allGroups: dict) -> None:
+        self._atomicWriteJson(self.getJsonPath(), allGroups)
+
+    # ----------------------------
+    # ✅ Public APIs used by Widget
+    # ----------------------------
+    def saveLabelGroup(self, groupName, labelColorMap):
+        allGroups = self._safeLoadAllGroups()
+        allGroups[groupName] = labelColorMap
+        self._safeSaveAllGroups(allGroups)
+
+    def loadLabelGroupWithColors(self, groupName):
+        allGroups = self._safeLoadAllGroups()
+        group = allGroups.get(groupName, {})
+        return group if isinstance(group, dict) else {}
 
     def getSavedGroups(self):
-        path = self.getJsonPath()
-        if not os.path.exists(path):
-            return []
-        with open(path, "r", encoding="utf-8") as f:
-            allGroups = json.load(f)
+        allGroups = self._safeLoadAllGroups()
         return list(allGroups.keys())
 
     def deleteLabelGroup(self, groupName):
-        path = self.getJsonPath()
-        if not os.path.exists(path):
-            return False
-        with open(path, "r", encoding="utf-8") as f:
-            allGroups = json.load(f)
+        allGroups = self._safeLoadAllGroups()
         if groupName not in allGroups:
             return False
         del allGroups[groupName]
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(allGroups, f, indent=2)
-        return True  # ✅ with 블록 밖으로 이동
+        self._safeSaveAllGroups(allGroups)
+        return True
 
+    # ----------------------------
+    # Existing functions (kept)
+    # ----------------------------
     def addSegment(self, segmentationNode, labelName, color):
         cleanLabel = labelName.strip()
         if not cleanLabel:
-            return  # 빈 라벨은 무시
+            return
 
         segmentation = segmentationNode.GetSegmentation()
         if segmentation.GetSegmentIdBySegmentName(cleanLabel):
-            return  # 중복도 무시
+            return
 
         if not isinstance(color, list) or len(color) != 3:
             color = [random.random(), random.random(), random.random()]
@@ -276,10 +388,6 @@ class SegTemplateEditorLogic(ScriptedLoadableModuleLogic):
         segment.Modified()
 
     def generateDistinctColor(self, index, totalCount):
-        """
-        Generate a visually distinct color using golden ratio hue stepping,
-        with added logic to avoid consecutive similar colors in RGB space.
-        """
         golden_ratio = 0.61803398875
         max_attempts = 10
 
@@ -292,14 +400,13 @@ class SegTemplateEditorLogic(ScriptedLoadableModuleLogic):
             if self.lastColor:
                 dist = math.sqrt(sum((a - b) ** 2 for a, b in zip((r, g, b), self.lastColor)))
                 if dist < 0.25:
-                    continue  # 색이 너무 비슷함 → 다른 hue 시도
+                    continue
 
             self.lastColor = (r, g, b)
             return [r, g, b]
 
-        # fallback
         return [r, g, b]
-    
+
     def generateGroupwiseColors(self, labelList):
         colorMap = {}
         usedColors = []
